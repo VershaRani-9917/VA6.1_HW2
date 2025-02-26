@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Employee List</title>
+    <link rel="stylesheet" href="styles.css" type="text/css" />
+  </head>
+  <body>
+    <h1>Employee List</h1>
+    <ul id="employeeList"></ul>
+  </body>
+
+  <script>
+    const apiUrl = "https://employee-management-backend-student-neog-ca.replit.app/employees";
+    const employeeList = document.querySelector("#employeeList");
+
+    async function fetchEmployees() {
+      try {
+        // Display a loading message
+        employeeList.textContent = "Loading...";
+
+        // Fetch the data from the API
+        const response = await fetch(apiUrl);
+
+        // Check if the response is OK
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse the JSON data
+        const data = await response.json();
+
+        // Clear the loading message
+        employeeList.textContent = "";
+
+        // Check if data exists and is an array
+        if (Array.isArray(data)) {
+          // Iterate and create list items
+          data.forEach((employee) => {
+            const liElement = document.createElement("li");
+            liElement.textContent = `${employee.name} - ${employee.role}`;
+            employeeList.appendChild(liElement);
+          });
+        } else {
+          employeeList.textContent = "No employees found.";
+        }
+      } catch (error) {
+        // Display an error message
+        employeeList.textContent = "An error occurred while fetching the data.";
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    // Call the function to fetch and display employees
+    fetchEmployees();
+  </script>
+</html>
